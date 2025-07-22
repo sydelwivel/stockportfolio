@@ -10,157 +10,281 @@ import io
 
 # -------------------- Page Config --------------------
 st.set_page_config(
-    page_title="📈 Stock Portfolio Dashboard", 
+    page_title="Stock Portfolio Dashboard", 
     layout="wide",
     initial_sidebar_state="expanded"
 )
 
-# -------------------- Claude-Inspired Theme --------------------
-def apply_claude_theme():
+# -------------------- Professional Dark Theme --------------------
+def apply_professional_theme():
     st.markdown("""
         <style>
-            /* Claude-inspired color palette */
+            /* Professional dark color palette */
             :root {
-                --claude-bg: #1a1a1a;
-                --claude-surface: #2d2d2d;
-                --claude-accent: #ff6b35;
-                --claude-text: #f5f5f5;
-                --claude-text-secondary: #b0b0b0;
-                --claude-border: #404040;
+                --primary-bg: #0f1419;
+                --secondary-bg: #1a1f29;
+                --surface-bg: #242b3d;
+                --accent-primary: #4f46e5;
+                --accent-secondary: #06b6d4;
+                --text-primary: #ffffff;
+                --text-secondary: #94a3b8;
+                --text-muted: #64748b;
+                --border-color: #334155;
+                --success-color: #10b981;
+                --warning-color: #f59e0b;
+                --error-color: #ef4444;
+                --hover-bg: #2d3748;
             }
             
-            /* Main app styling */
+            /* Global app styling */
             .stApp {
-                background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
-                color: var(--claude-text);
+                background: linear-gradient(135deg, var(--primary-bg) 0%, var(--secondary-bg) 100%);
+                color: var(--text-primary);
+                font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             }
             
-            /* Sidebar styling */
+            /* Sidebar professional styling */
             .css-1d391kg {
-                background-color: var(--claude-surface);
-                border-right: 1px solid var(--claude-border);
+                background: linear-gradient(180deg, var(--secondary-bg) 0%, var(--surface-bg) 100%);
+                border-right: 2px solid var(--border-color);
             }
             
-            /* Metric containers */
+            /* Enhanced metric containers */
             div[data-testid="metric-container"] {
-                background: linear-gradient(145deg, var(--claude-surface), #3a3a3a);
-                border: 1px solid var(--claude-border);
-                border-radius: 12px;
-                padding: 1.2rem;
-                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
-                transition: transform 0.2s ease;
+                background: linear-gradient(145deg, var(--surface-bg), var(--hover-bg));
+                border: 1px solid var(--border-color);
+                border-radius: 16px;
+                padding: 1.5rem;
+                box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                backdrop-filter: blur(10px);
             }
             
             div[data-testid="metric-container"]:hover {
-                transform: translateY(-2px);
-                box-shadow: 0 6px 12px rgba(255, 107, 53, 0.2);
+                transform: translateY(-4px);
+                box-shadow: 0 12px 40px rgba(79, 70, 229, 0.3);
+                border-color: var(--accent-primary);
             }
             
-            /* Metric text colors - Fixed visibility */
-            div[data-testid="metric-container"] label {
-                color: var(--claude-text-secondary) !important;
-                font-weight: 500;
+            /* Force high contrast text visibility */
+            div[data-testid="metric-container"] label,
+            div[data-testid="metric-container"] .metric-label {
+                color: var(--text-secondary) !important;
+                font-weight: 600 !important;
+                font-size: 0.875rem !important;
+                text-transform: uppercase !important;
+                letter-spacing: 0.05em !important;
             }
             
-            div[data-testid="metric-container"] div[data-testid="metric-value"] {
-                color: var(--claude-text) !important;
-                font-weight: 700;
+            div[data-testid="metric-container"] div[data-testid="metric-value"],
+            div[data-testid="metric-container"] .metric-value {
+                color: var(--text-primary) !important;
+                font-weight: 700 !important;
+                font-size: 1.5rem !important;
             }
             
-            /* Force all metric text to be visible */
-            div[data-testid="metric-container"] * {
-                color: var(--claude-text) !important;
-            }
-            
-            div[data-testid="metric-container"] label {
-                color: var(--claude-text-secondary) !important;
-            }
-            
-            /* Delta values */
+            /* Delta styling */
             div[data-testid="metric-container"] [data-testid="metric-delta"] {
-                color: inherit !important;
+                font-weight: 600 !important;
+                font-size: 0.875rem !important;
             }
             
-            /* Tab styling */
+            /* Professional tab styling */
             .stTabs [data-baseweb="tab-list"] {
-                gap: 8px;
+                gap: 4px;
+                background: var(--surface-bg);
+                border-radius: 12px;
+                padding: 4px;
             }
             
             .stTabs [data-baseweb="tab"] {
-                background-color: var(--claude-surface);
+                background: transparent;
                 border-radius: 8px;
-                border: 1px solid var(--claude-border);
-                color: var(--claude-text-secondary);
+                border: none;
+                color: var(--text-muted);
+                font-weight: 600;
+                font-size: 0.875rem;
+                padding: 12px 24px;
+                transition: all 0.2s ease;
+                text-transform: uppercase;
+                letter-spacing: 0.05em;
+            }
+            
+            .stTabs [aria-selected="true"] {
+                background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+                color: white;
+                box-shadow: 0 4px 12px rgba(79, 70, 229, 0.4);
+            }
+            
+            .stTabs [data-baseweb="tab"]:hover:not([aria-selected="true"]) {
+                background: var(--hover-bg);
+                color: var(--text-secondary);
+            }
+            
+            /* Typography improvements */
+            h1, h2, h3, h4, h5, h6 {
+                color: var(--text-primary) !important;
+                font-weight: 700 !important;
+                letter-spacing: -0.025em;
+            }
+            
+            h1 { font-size: 2.25rem !important; }
+            h2 { font-size: 1.875rem !important; }
+            h3 { font-size: 1.5rem !important; }
+            h4 { font-size: 1.25rem !important; }
+            
+            /* Enhanced form controls */
+            .stSelectbox > div > div,
+            .stTextInput > div > div > input {
+                background: var(--surface-bg) !important;
+                border: 2px solid var(--border-color) !important;
+                border-radius: 12px !important;
+                color: var(--text-primary) !important;
                 font-weight: 500;
                 transition: all 0.2s ease;
             }
             
-            .stTabs [aria-selected="true"] {
-                background-color: var(--claude-accent);
-                color: white;
-                border-color: var(--claude-accent);
+            .stSelectbox > div > div:focus-within,
+            .stTextInput > div > div:focus-within {
+                border-color: var(--accent-primary) !important;
+                box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1) !important;
             }
             
-            /* Headers */
-            h1, h2, h3 {
-                color: var(--claude-text);
-                font-weight: 600;
-            }
-            
-            /* Select boxes */
-            .stSelectbox > div > div {
-                background-color: var(--claude-surface);
-                border: 1px solid var(--claude-border);
-                border-radius: 8px;
-            }
-            
-            /* File uploader */
+            /* File uploader styling */
             .stFileUploader > div {
-                background-color: var(--claude-surface);
-                border: 2px dashed var(--claude-border);
-                border-radius: 12px;
+                background: var(--surface-bg);
+                border: 2px dashed var(--border-color);
+                border-radius: 16px;
+                transition: all 0.2s ease;
             }
             
-            /* Success/Warning/Error messages */
+            .stFileUploader > div:hover {
+                border-color: var(--accent-primary);
+                background: var(--hover-bg);
+            }
+            
+            /* Professional alert styling */
             .stSuccess {
-                background-color: rgba(34, 197, 94, 0.1);
-                border: 1px solid rgba(34, 197, 94, 0.3);
+                background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(16, 185, 129, 0.05));
+                border: 1px solid rgba(16, 185, 129, 0.3);
+                border-radius: 12px;
+                color: var(--success-color);
             }
             
             .stWarning {
-                background-color: rgba(251, 191, 36, 0.1);
-                border: 1px solid rgba(251, 191, 36, 0.3);
+                background: linear-gradient(135deg, rgba(245, 158, 11, 0.1), rgba(245, 158, 11, 0.05));
+                border: 1px solid rgba(245, 158, 11, 0.3);
+                border-radius: 12px;
+                color: var(--warning-color);
             }
             
             .stError {
-                background-color: rgba(239, 68, 68, 0.1);
+                background: linear-gradient(135deg, rgba(239, 68, 68, 0.1), rgba(239, 68, 68, 0.05));
                 border: 1px solid rgba(239, 68, 68, 0.3);
+                border-radius: 12px;
+                color: var(--error-color);
+            }
+            
+            .stInfo {
+                background: linear-gradient(135deg, rgba(6, 182, 212, 0.1), rgba(6, 182, 212, 0.05));
+                border: 1px solid rgba(6, 182, 212, 0.3);
+                border-radius: 12px;
+                color: var(--accent-secondary);
+            }
+            
+            /* Enhanced dataframe styling */
+            .stDataFrame {
+                background: var(--surface-bg);
+                border-radius: 12px;
+                overflow: hidden;
+                border: 1px solid var(--border-color);
+            }
+            
+            /* Button enhancements */
+            .stButton > button {
+                background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+                color: white;
+                border: none;
+                border-radius: 12px;
+                font-weight: 600;
+                padding: 0.75rem 1.5rem;
+                transition: all 0.2s ease;
+                text-transform: uppercase;
+                letter-spacing: 0.05em;
+                font-size: 0.875rem;
+            }
+            
+            .stButton > button:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 8px 24px rgba(79, 70, 229, 0.4);
+            }
+            
+            /* Scrollbar styling */
+            ::-webkit-scrollbar {
+                width: 8px;
+                height: 8px;
+            }
+            
+            ::-webkit-scrollbar-track {
+                background: var(--primary-bg);
+            }
+            
+            ::-webkit-scrollbar-thumb {
+                background: var(--border-color);
+                border-radius: 4px;
+            }
+            
+            ::-webkit-scrollbar-thumb:hover {
+                background: var(--text-muted);
             }
         </style>
     """, unsafe_allow_html=True)
 
-apply_claude_theme()
+apply_professional_theme()
 
-# -------------------- Header --------------------
+# -------------------- Professional Header --------------------
 st.markdown("""
-    <div style="text-align: center; padding: 2rem 0; border-bottom: 1px solid #404040; margin-bottom: 2rem;">
-        <h1 style="color: #ff6b35; font-size: 2.5rem; margin: 0;">📈 Stock Portfolio Dashboard</h1>
-        <p style="color: #b0b0b0; font-size: 1.1rem; margin-top: 0.5rem;">Intelligent Investment Tracking & Analysis</p>
+    <div style="
+        text-align: center; 
+        padding: 3rem 0 2rem 0; 
+        border-bottom: 2px solid var(--border-color); 
+        margin-bottom: 2rem;
+        background: linear-gradient(135deg, rgba(79, 70, 229, 0.1), rgba(6, 182, 212, 0.1));
+        border-radius: 16px;
+        margin: -1rem -1rem 2rem -1rem;
+        padding-left: 1rem;
+        padding-right: 1rem;
+    ">
+        <h1 style="
+            background: linear-gradient(135deg, #4f46e5, #06b6d4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-size: 3rem; 
+            margin: 0;
+            font-weight: 800;
+            letter-spacing: -0.05em;
+        ">Stock Portfolio Dashboard</h1>
+        <p style="
+            color: var(--text-secondary); 
+            font-size: 1.25rem; 
+            margin-top: 1rem;
+            font-weight: 500;
+        ">Professional Investment Tracking & Portfolio Analytics</p>
     </div>
 """, unsafe_allow_html=True)
 
 # -------------------- Stocks by Sector --------------------
 stocks = {
-    "Nifty 50 Sector": ["RELIANCE.NS", "INFY.NS", "TCS.NS"],
+    "Nifty 50 Leaders": ["RELIANCE.NS", "INFY.NS", "TCS.NS"],
     "Banking Sector": ["HDFCBANK.NS", "ICICIBANK.NS", "AXISBANK.NS"],
-    "Pharma Sector": ["SUNPHARMA.NS", "CIPLA.NS", "DRREDDY.NS"],
-    "IT Sector": ["WIPRO.NS", "TECHM.NS", "HCLTECH.NS"],
-    "Auto Sector": ["MARUTI.NS", "TATAMOTORS.NS", "M&M.NS"]
+    "Pharmaceuticals": ["SUNPHARMA.NS", "CIPLA.NS", "DRREDDY.NS"],
+    "Information Technology": ["WIPRO.NS", "TECHM.NS", "HCLTECH.NS"],
+    "Automotive": ["MARUTI.NS", "TATAMOTORS.NS", "M&M.NS"]
 }
 
-# -------------------- Sample Portfolio Data (Kaggle-style) --------------------
+# -------------------- Sample Portfolio Data --------------------
 def load_sample_portfolio():
-    """Generate sample portfolio data similar to Kaggle datasets"""
+    """Generate professional sample portfolio data"""
     portfolio_data = {
         'Stock': ['RELIANCE.NS', 'INFY.NS', 'TCS.NS', 'HDFCBANK.NS', 'ICICIBANK.NS', 
                  'SUNPHARMA.NS', 'WIPRO.NS', 'MARUTI.NS'],
@@ -170,49 +294,49 @@ def load_sample_portfolio():
     }
     return pd.DataFrame(portfolio_data)
 
-# -------------------- Alternative News Sources --------------------
-def fetch_alternative_news():
-    """Fetch news from alternative free sources"""
+# -------------------- Professional News Sources --------------------
+def fetch_professional_news():
+    """Fetch professional market news updates"""
     news_items = [
         {
-            "title": "Indian Stock Markets Show Strong Performance Amid Global Uncertainty",
-            "description": "Domestic equity markets continue to outperform global peers with strong fundamentals and robust corporate earnings driving investor confidence.",
-            "source": "Market Analysis",
+            "title": "Indian Equity Markets Demonstrate Resilience Amid Global Market Volatility",
+            "description": "Domestic equity indices continue to outperform international markets, supported by strong institutional flows and robust corporate earnings across key sectors.",
+            "source": "Financial Analytics",
             "publishedAt": datetime.now().strftime("%Y-%m-%d %H:%M"),
             "url": "#"
         },
         {
-            "title": "Banking Sector Leads Rally as RBI Maintains Accommodative Stance",
-            "description": "Banking stocks surge as the Reserve Bank of India signals continued support for economic growth through monetary policy measures.",
-            "source": "Financial Times India",
+            "title": "Banking Sector Consolidation Drives Institutional Investment Interest",
+            "description": "Major banking institutions report strong quarterly performance as digital transformation initiatives and credit growth support sector expansion.",
+            "source": "Banking Industry Report",
             "publishedAt": datetime.now().strftime("%Y-%m-%d %H:%M"),
             "url": "#"
         },
         {
-            "title": "IT Stocks Gain on Strong Q4 Earnings and Digital Transformation Demand",
-            "description": "Technology sector posts impressive quarterly results driven by increased demand for digital services and cloud solutions.",
-            "source": "Tech Business News",
+            "title": "Technology Sector Leadership in Digital Infrastructure Development",
+            "description": "Leading IT services companies capitalize on enterprise digital transformation demand, reporting significant contract wins and revenue growth.",
+            "source": "Technology Business Review",
             "publishedAt": datetime.now().strftime("%Y-%m-%d %H:%M"),
             "url": "#"
         },
         {
-            "title": "Pharmaceutical Sector Benefits from Export Growth and R&D Investments",
-            "description": "Pharma companies report strong export performance and increased investment in research and development activities.",
-            "source": "Healthcare Business",
+            "title": "Pharmaceutical Industry Expansion Through R&D Investment and Export Growth",
+            "description": "Pharmaceutical companies demonstrate strong performance driven by international market expansion and increased research development spending.",
+            "source": "Healthcare Industry Analysis",
             "publishedAt": datetime.now().strftime("%Y-%m-%d %H:%M"),
             "url": "#"
         },
         {
-            "title": "Auto Sector Recovery Continues with Rising EV Adoption",
-            "description": "Automotive industry shows signs of recovery with electric vehicle sales contributing significantly to overall growth.",
-            "source": "Auto Industry News",
+            "title": "Automotive Sector Transformation with Electric Vehicle Integration",
+            "description": "Traditional automotive manufacturers accelerate electric vehicle production capabilities while maintaining strong conventional vehicle sales.",
+            "source": "Automotive Industry News",
             "publishedAt": datetime.now().strftime("%Y-%m-%d %H:%M"),
             "url": "#"
         },
         {
-            "title": "Market Outlook: Analysts Remain Optimistic Despite Global Headwinds",
-            "description": "Financial analysts maintain positive outlook on Indian markets citing strong domestic consumption and government reforms.",
-            "source": "Investment Advisory",
+            "title": "Market Outlook: Institutional Analysts Maintain Positive Growth Projections",
+            "description": "Investment research firms continue to recommend domestic equity exposure based on strong macroeconomic fundamentals and policy support.",
+            "source": "Investment Research",
             "publishedAt": datetime.now().strftime("%Y-%m-%d %H:%M"),
             "url": "#"
         }
@@ -227,13 +351,13 @@ def fetch_stock_price(ticker):
     except Exception:
         return None
 
-# -------------------- Plot Chart --------------------
-def plot_stock_chart(ticker):
+# -------------------- Enhanced Chart Plotting --------------------
+def plot_professional_stock_chart(ticker):
     df = fetch_stock_price(ticker)
     if df is not None:
         fig = go.Figure()
         
-        # Add candlestick chart
+        # Add professional candlestick chart
         fig.add_trace(go.Candlestick(
             x=df.index,
             open=df['Open'],
@@ -241,28 +365,43 @@ def plot_stock_chart(ticker):
             low=df['Low'],
             close=df['Close'],
             name=ticker,
-            increasing_line_color='#22c55e',
-            decreasing_line_color='#ef4444'
+            increasing_line_color='#10b981',
+            decreasing_line_color='#ef4444',
+            increasing_fillcolor='rgba(16, 185, 129, 0.3)',
+            decreasing_fillcolor='rgba(239, 68, 68, 0.3)'
         ))
         
         fig.update_layout(
-            title=f'{ticker} - Stock Performance',
-            xaxis_title='Date',
+            title={
+                'text': f'{ticker.replace(".NS", "")} - Professional Stock Analysis',
+                'x': 0.5,
+                'xanchor': 'center',
+                'font': {'size': 20, 'color': '#ffffff'}
+            },
+            xaxis_title='Trading Period',
             yaxis_title='Price (INR)',
             template="plotly_dark",
             paper_bgcolor='rgba(0,0,0,0)',
-            plot_bgcolor='rgba(0,0,0,0)',
-            font=dict(color='#f5f5f5'),
-            title_font_size=18,
-            xaxis=dict(gridcolor='#404040'),
-            yaxis=dict(gridcolor='#404040')
+            plot_bgcolor='rgba(36, 43, 61, 0.5)',
+            font=dict(color='#ffffff', family='Inter'),
+            xaxis=dict(
+                gridcolor='rgba(51, 65, 85, 0.5)',
+                showgrid=True,
+                linecolor='#334155'
+            ),
+            yaxis=dict(
+                gridcolor='rgba(51, 65, 85, 0.5)',
+                showgrid=True,
+                linecolor='#334155'
+            ),
+            margin=dict(l=0, r=0, t=60, b=0)
         )
         st.plotly_chart(fig, use_container_width=True)
     else:
-        st.error(f"No data available for {ticker}")
+        st.error(f"Market data unavailable for {ticker}")
 
-# -------------------- Portfolio Pie Chart --------------------
-def create_portfolio_pie_chart(portfolio_df):
+# -------------------- Professional Portfolio Analysis --------------------
+def create_professional_portfolio_analysis(portfolio_df):
     # Calculate current values
     current_values = []
     for _, row in portfolio_df.iterrows():
@@ -276,67 +415,89 @@ def create_portfolio_pie_chart(portfolio_df):
     
     portfolio_df['Current_Value'] = current_values
     
-    # Create pie chart by sector
+    # Create professional sector distribution
     sector_values = portfolio_df.groupby('Sector')['Current_Value'].sum().reset_index()
     
     fig = px.pie(
         sector_values, 
         values='Current_Value', 
         names='Sector',
-        title="Portfolio Distribution by Sector",
-        color_discrete_sequence=['#ff6b35', '#22c55e', '#3b82f6', '#8b5cf6', '#f59e0b']
+        title="Portfolio Sector Allocation Analysis",
+        color_discrete_sequence=['#4f46e5', '#06b6d4', '#10b981', '#f59e0b', '#8b5cf6']
     )
     
     fig.update_layout(
         template="plotly_dark",
         paper_bgcolor='rgba(0,0,0,0)',
         plot_bgcolor='rgba(0,0,0,0)',
-        font=dict(color='#f5f5f5'),
-        title_font_size=18
+        font=dict(color='#ffffff', family='Inter'),
+        title=dict(x=0.5, font=dict(size=18)),
+        showlegend=True,
+        legend=dict(
+            orientation="v",
+            yanchor="middle",
+            y=0.5,
+            xanchor="left",
+            x=1.05
+        )
     )
     
     return fig, portfolio_df
 
-# -------------------- Sidebar --------------------
+# -------------------- Professional Sidebar --------------------
 with st.sidebar:
-    st.markdown("### 🎨 Dashboard Controls")
+    st.markdown("### Dashboard Controls")
     
     # Portfolio file uploader
-    st.markdown("#### 📊 Upload Portfolio Data")
+    st.markdown("#### Portfolio Data Management")
     uploaded_file = st.file_uploader(
-        "Upload CSV file with columns: Stock, Shares, Purchase_Price, Sector",
-        type=['csv']
+        "Upload Portfolio CSV",
+        type=['csv'],
+        help="Required columns: Stock, Shares, Purchase_Price, Sector"
     )
     
     if uploaded_file:
         portfolio_df = pd.read_csv(uploaded_file)
-        st.success("Portfolio data loaded successfully!")
+        st.success("Portfolio data loaded successfully")
     else:
         st.info("Using sample portfolio data")
         portfolio_df = load_sample_portfolio()
     
-    # Quick stats
-    st.markdown("#### 📈 Quick Stats")
+    # Professional stats display
+    st.markdown("#### Portfolio Overview")
     total_stocks = len(portfolio_df)
     total_sectors = portfolio_df['Sector'].nunique()
-    st.metric("Total Stocks", total_stocks)
-    st.metric("Sectors", total_sectors)
+    
+    col1, col2 = st.columns(2)
+    with col1:
+        st.metric("Holdings", total_stocks)
+    with col2:
+        st.metric("Sectors", total_sectors)
+    
+    # Additional controls
+    st.markdown("#### Analysis Settings")
+    show_advanced = st.checkbox("Advanced Analytics", value=False)
+    refresh_data = st.button("Refresh Market Data")
+    
+    if refresh_data:
+        st.cache_data.clear()
+        st.success("Data refreshed")
 
-# -------------------- Main Tabs --------------------
-portfolio_tab, shares_tab, analysis_tab, charts_tab, news_tab = st.tabs([
-    "📊 Live Portfolio", 
-    "💼 My Shares",
-    "🥧 Portfolio Analysis", 
-    "📈 Stock Charts", 
-    "📰 Market News"
+# -------------------- Main Navigation Tabs --------------------
+portfolio_tab, holdings_tab, analysis_tab, charts_tab, news_tab = st.tabs([
+    "Live Portfolio", 
+    "My Holdings",
+    "Portfolio Analysis", 
+    "Stock Charts", 
+    "Market News"
 ])
 
-# -------------------- Portfolio Tab --------------------
+# -------------------- Live Portfolio Tab --------------------
 with portfolio_tab:
-    st.markdown("## 📊 Live Market Overview")
+    st.markdown("## Live Market Overview")
     
-    # Live sector performance
-    st.markdown("### 🔷 Sector Performance")
+    # Professional sector performance display
+    st.markdown("### Sector Performance Dashboard")
     for sector, tickers in stocks.items():
         st.markdown(f"#### {sector}")
         cols = st.columns(len(tickers))
@@ -354,11 +515,11 @@ with portfolio_tab:
                         delta=f"{delta:+.2f} ({delta_pct:+.2f}%)"
                     )
                 else:
-                    st.warning(f"{ticker}: No data")
+                    st.warning(f"{ticker}: Data unavailable")
 
-# -------------------- My Shares Tab --------------------
-with shares_tab:
-    st.markdown("## 💼 My Share Holdings")
+# -------------------- Holdings Tab --------------------
+with holdings_tab:
+    st.markdown("## Portfolio Holdings Management")
     
     if not portfolio_df.empty:
         # Portfolio overview cards
@@ -380,16 +541,16 @@ with shares_tab:
         pnl_percentage = (total_pnl / total_investment) * 100 if total_investment > 0 else 0
         
         with col1:
-            st.metric("💰 Total Investment", f"₹{total_investment:,.0f}")
+            st.metric("Total Investment", f"₹{total_investment:,.0f}")
         with col2:
-            st.metric("📈 Current Value", f"₹{total_current_value:,.0f}")
+            st.metric("Current Value", f"₹{total_current_value:,.0f}")
         with col3:
-            st.metric("💵 Total P&L", f"₹{total_pnl:,.0f}", f"{pnl_percentage:+.1f}%")
+            st.metric("Total P&L", f"₹{total_pnl:,.0f}", f"{pnl_percentage:+.1f}%")
         with col4:
-            st.metric("📊 Total Holdings", f"{len(portfolio_df)} stocks")
+            st.metric("Total Holdings", f"{len(portfolio_df)} positions")
     
-        # Detailed holdings table
-        st.markdown("### 📋 Detailed Holdings")
+        # Professional holdings table
+        st.markdown("### Detailed Holdings Analysis")
         
         # Create enhanced portfolio display
         enhanced_portfolio = portfolio_df.copy()
@@ -444,19 +605,19 @@ with shares_tab:
             hide_index=True
         )
         
-        # Top performers section
-        st.markdown("### 🏆 Top Performers")
+        # Professional performance analysis
+        st.markdown("### Performance Analysis")
         col1, col2 = st.columns(2)
         
         with col1:
-            st.markdown("####  Best Performers")
+            st.markdown("#### Top Performers")
             top_gainers = enhanced_portfolio.nlargest(3, 'P&L_%')[['Stock', 'P&L_%']].copy()
             top_gainers['Stock'] = top_gainers['Stock'].str.replace('.NS', '')
             for _, row in top_gainers.iterrows():
                 st.success(f"**{row['Stock']}**: +{row['P&L_%']:.1f}%")
         
         with col2:
-            st.markdown("#### 📉 Underperformers")
+            st.markdown("#### Underperformers")
             top_losers = enhanced_portfolio.nsmallest(3, 'P&L_%')[['Stock', 'P&L_%']].copy()
             top_losers['Stock'] = top_losers['Stock'].str.replace('.NS', '')
             for _, row in top_losers.iterrows():
@@ -475,96 +636,98 @@ with shares_tab:
 
 # -------------------- Analysis Tab --------------------
 with analysis_tab:
-    st.markdown("##  Portfolio Analysis Dashboard")
+    st.markdown("## Advanced Portfolio Analytics")
     
     if not portfolio_df.empty:
         col1, col2 = st.columns(2)
         
         with col1:
             # Sector distribution pie chart
-            pie_fig, updated_portfolio = create_portfolio_pie_chart(portfolio_df)
+            pie_fig, updated_portfolio = create_professional_portfolio_analysis(portfolio_df)
             st.plotly_chart(pie_fig, use_container_width=True)
         
         with col2:
-            # Stock-wise distribution
+            # Professional stock-wise analysis
             stock_fig = px.bar(
                 updated_portfolio,
                 x='Stock',
                 y='Current_Value',
                 color='Sector',
-                title="Stock-wise Portfolio Value",
-                color_discrete_sequence=['#ff6b35', '#22c55e', '#3b82f6', '#8b5cf6', '#f59e0b']
+                title="Individual Stock Value Distribution",
+                color_discrete_sequence=['#4f46e5', '#06b6d4', '#10b981', '#f59e0b', '#8b5cf6']
             )
             stock_fig.update_layout(
                 template="plotly_dark",
                 paper_bgcolor='rgba(0,0,0,0)',
-                plot_bgcolor='rgba(0,0,0,0)',
-                font=dict(color='#f5f5f5'),
-                xaxis=dict(tickangle=45)
+                plot_bgcolor='rgba(36, 43, 61, 0.5)',
+                font=dict(color='#ffffff', family='Inter'),
+                xaxis=dict(tickangle=45, title='Stock Symbol'),
+                yaxis=dict(title='Portfolio Value (₹)'),
+                title=dict(x=0.5, font=dict(size=16))
             )
             st.plotly_chart(stock_fig, use_container_width=True)
         
-        # Performance metrics
-        st.markdown("### 📊 Performance Metrics")
+        # Advanced performance metrics
+        st.markdown("### Advanced Performance Metrics")
         col1, col2, col3, col4 = st.columns(4)
         
         with col1:
             total_current = updated_portfolio['Current_Value'].sum()
             total_invested = (portfolio_df['Shares'] * portfolio_df['Purchase_Price']).sum()
             total_gain_loss = total_current - total_invested
-            st.metric("Total P&L", f"₹{total_gain_loss:,.2f}", f"{(total_gain_loss/total_invested)*100:+.2f}%")
+            st.metric("Total Return", f"₹{total_gain_loss:,.2f}", f"{(total_gain_loss/total_invested)*100:+.2f}%")
         
         with col2:
             best_performer = updated_portfolio.loc[
                 updated_portfolio['Current_Value'].idxmax(), 'Stock'
             ].replace('.NS', '')
-            st.metric("Best Performer", best_performer)
+            st.metric("Top Position", best_performer)
         
         with col3:
             largest_holding = updated_portfolio.loc[
                 updated_portfolio['Current_Value'].idxmax(), 'Current_Value'
             ]
-            st.metric("Largest Position", f"₹{largest_holding:,.2f}")
+            st.metric("Largest Holding", f"₹{largest_holding:,.2f}")
         
         with col4:
             diversification = len(updated_portfolio['Sector'].unique())
-            st.metric("Diversification", f"{diversification} Sectors")
+            st.metric("Sector Diversification", f"{diversification} sectors")
 
 # -------------------- Charts Tab --------------------
 with charts_tab:
-    st.markdown("## 📈 Interactive Stock Analysis")
+    st.markdown("## Professional Stock Analysis")
     
     col1, col2 = st.columns(2)
     with col1:
-        selected_sector = st.selectbox("🏢 Choose Sector", list(stocks.keys()))
+        selected_sector = st.selectbox("Select Sector", list(stocks.keys()))
     with col2:
-        selected_stock = st.selectbox("📈 Choose Stock", stocks[selected_sector])
+        selected_stock = st.selectbox("Select Stock", stocks[selected_sector])
     
-    plot_stock_chart(selected_stock)
+    plot_professional_stock_chart(selected_stock)
     
-    # Additional technical analysis
+    # Professional technical analysis
     df = fetch_stock_price(selected_stock)
     if df is not None:
-        st.markdown("### 📊 Technical Indicators")
+        st.markdown("### Technical Analysis Indicators")
         col1, col2, col3 = st.columns(3)
         
         with col1:
             sma_5 = df['Close'].rolling(5).mean().iloc[-1]
-            st.metric("5-Day SMA", f"₹{sma_5:.2f}")
+            st.metric("5-Day Moving Average", f"₹{sma_5:.2f}")
         
         with col2:
             volatility = df['Close'].pct_change().std() * 100
-            st.metric("Volatility", f"{volatility:.2f}%")
+            st.metric("Price Volatility", f"{volatility:.2f}%")
         
         with col3:
             volume_avg = df['Volume'].mean()
-            st.metric("Avg Volume", f"{volume_avg/1000000:.1f}M")
+            st.metric("Average Volume", f"{volume_avg/1000000:.1f}M")
 
 # -------------------- News Tab --------------------
 with news_tab:
-    st.markdown("## 📰 Latest Market News & Updates")
+    st.markdown("## Market Intelligence & News")
     
-    # Try to fetch from API first, then use alternative
+    # Professional news fetching
     try:
         api_key = "5e01ad5669af43ca9ccd13c46e5efd27"  # Replace with your API key
         url = f"https://newsapi.org/v2/top-headlines?country=in&category=business&apiKey={api_key}"
@@ -578,17 +741,17 @@ with news_tab:
                 articles = api_articles
                 st.success("Live news feed active")
             else:
-                articles = fetch_alternative_news()
-                st.info("Showing curated market updates")
+                articles = fetch_professional_news()
+                st.info("Displaying curated market intelligence")
         else:
-            articles = fetch_alternative_news()
-            st.info("Showing curated market updates")
+            articles = fetch_professional_news()
+            st.info("Displaying curated market intelligence")
             
     except Exception as e:
-        articles = fetch_alternative_news()
-        st.info("📚 Showing curated market updates")
+        articles = fetch_professional_news()
+        st.info("Displaying curated market intelligence")
     
-    # Display news in cards
+    # Professional news display
     if articles:
         for i in range(0, len(articles), 2):
             cols = st.columns(2)
@@ -596,36 +759,69 @@ with news_tab:
                 if i + j < len(articles):
                     article = articles[i + j]
                     with col:
-                        # Fix for source field handling
-                        source = article.get('source', 'Market News')
+                        # Professional source handling
+                        source = article.get('source', 'Market Intelligence')
                         if isinstance(source, dict):
-                            source_name = source.get('name', 'Market News')
+                            source_name = source.get('name', 'Market Intelligence')
                         else:
                             source_name = source
                         
                         st.markdown(f"""
                             <div style="
-                                background: linear-gradient(145deg, #2d2d2d, #3a3a3a);
-                                padding: 1.5rem;
-                                border-radius: 12px;
-                                border: 1px solid #404040;
-                                margin-bottom: 1rem;
-                                height: 280px;
+                                background: linear-gradient(145deg, var(--surface-bg), var(--hover-bg));
+                                padding: 2rem;
+                                border-radius: 16px;
+                                border: 1px solid var(--border-color);
+                                margin-bottom: 1.5rem;
+                                height: 300px;
                                 overflow: hidden;
                                 position: relative;
+                                transition: all 0.3s ease;
+                                backdrop-filter: blur(10px);
                             ">
-                                <h4 style="color: #ff6b35; margin-top: 0; line-height: 1.3;">
-                                    {article['title'][:80]}{'...' if len(article['title']) > 80 else ''}
+                                <h4 style="
+                                    background: linear-gradient(135deg, #4f46e5, #06b6d4);
+                                    -webkit-background-clip: text;
+                                    -webkit-text-fill-color: transparent;
+                                    margin-top: 0; 
+                                    line-height: 1.4;
+                                    font-weight: 700;
+                                    font-size: 1.1rem;
+                                ">
+                                    {article['title'][:85]}{'...' if len(article['title']) > 85 else ''}
                                 </h4>
-                                <p style="color: #b0b0b0; font-size: 0.9rem; line-height: 1.4; margin-bottom: 3rem;">
-                                    {article['description'][:120] if article.get('description') else 'Market analysis and insights for investors'}...
+                                <p style="
+                                    color: var(--text-secondary); 
+                                    font-size: 0.95rem; 
+                                    line-height: 1.5; 
+                                    margin-bottom: 3.5rem;
+                                    font-weight: 400;
+                                ">
+                                    {article['description'][:130] if article.get('description') else 'Professional market analysis and investment insights for portfolio management'}...
                                 </p>
-                                <div style="position: absolute; bottom: 1rem; left: 1.5rem; right: 1.5rem;">
+                                <div style="
+                                    position: absolute; 
+                                    bottom: 1.5rem; 
+                                    left: 2rem; 
+                                    right: 2rem;
+                                ">
                                     <a href="{article.get('url', '#')}" target="_blank" 
-                                       style="color: #22c55e; text-decoration: none; font-weight: 500;">
-                                       Read More →
+                                       style="
+                                           background: linear-gradient(135deg, #4f46e5, #06b6d4);
+                                           -webkit-background-clip: text;
+                                           -webkit-text-fill-color: transparent;
+                                           text-decoration: none; 
+                                           font-weight: 600;
+                                           font-size: 0.9rem;
+                                       ">
+                                       Read Full Analysis →
                                     </a>
-                                    <p style="color: #666; font-size: 0.8rem; margin-top: 0.5rem;">
+                                    <p style="
+                                        color: var(--text-muted); 
+                                        font-size: 0.8rem; 
+                                        margin-top: 0.75rem;
+                                        font-weight: 500;
+                                    ">
                                         {source_name} • 
                                         {article.get('publishedAt', datetime.now().strftime('%Y-%m-%d %H:%M'))}
                                     </p>
@@ -633,14 +829,31 @@ with news_tab:
                             </div>
                         """, unsafe_allow_html=True)
     else:
-        st.warning(" Unable to load news at the moment. Please try again later.")
+        st.warning("Market news temporarily unavailable. Please try again later.")
 
-# -------------------- Footer --------------------
+# -------------------- Professional Footer --------------------
 st.markdown("---")
 st.markdown("""
-    <div style="text-align: center; padding: 2rem 0; color: #b0b0b0;">
-        <p>🛠️ <strong>Enhanced Stock Portfolio Dashboard</strong></p>
-        <p>Powered by yFinance • Plotly • Streamlit • NewsAPI</p>
-        <p style="font-size: 0.8rem;">.Upload your own portfolio CSV or use sample data </p>
+    <div style="
+        text-align: center; 
+        padding: 2.5rem 0; 
+        color: var(--text-muted);
+        background: linear-gradient(135deg, rgba(79, 70, 229, 0.05), rgba(6, 182, 212, 0.05));
+        border-radius: 16px;
+        margin-top: 2rem;
+    ">
+        <h4 style="
+            background: linear-gradient(135deg, #4f46e5, #06b6d4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        ">Professional Stock Portfolio Dashboard</h4>
+        <p style="font-size: 1rem; margin-bottom: 0.5rem; font-weight: 500;">
+            Powered by yFinance • Plotly • Streamlit • Professional Analytics
+        </p>
+        <p style="font-size: 0.875rem; color: var(--text-muted);">
+            Upload your portfolio CSV or analyze sample data for comprehensive investment insights
+        </p>
     </div>
 """, unsafe_allow_html=True)
