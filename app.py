@@ -417,10 +417,10 @@ def create_portfolio_pie_chart(portfolio_df):
 
 # -------------------- Sidebar --------------------
 with st.sidebar:
-    st.markdown("### 🎨 Dashboard Controls")
+    st.markdown("###  Dashboard Controls")
     
     # Portfolio file uploader
-    st.markdown("#### 📊 Upload Portfolio Data")
+    st.markdown("#### Upload Portfolio Data")
     uploaded_file = st.file_uploader(
         "Upload CSV file with columns: Stock, Shares, Purchase_Price, Sector",
         type=['csv']
@@ -442,19 +442,19 @@ with st.sidebar:
 
 # -------------------- Main Tabs --------------------
 portfolio_tab, shares_tab, analysis_tab, charts_tab, news_tab = st.tabs([
-    "📊 Live Portfolio", 
-    "💼 My Shares",
-    "🥧 Portfolio Analysis", 
-    "📈 Stock Charts", 
-    "📰 Market News"
+    " Live Portfolio", 
+    " My Shares",
+    " Portfolio Analysis", 
+    " Stock Charts", 
+    " Market News"
 ])
 
 # -------------------- Portfolio Tab --------------------
 with portfolio_tab:
-    st.markdown("## 📊 Live Market Overview")
+    st.markdown("##  Live Market Overview")
     
     # Live sector performance
-    st.markdown("### 🔷 Sector Performance")
+    st.markdown("###  Sector Performance")
     for sector, tickers in stocks.items():
         st.markdown(f"#### {sector}")
         cols = st.columns(len(tickers))
@@ -476,7 +476,7 @@ with portfolio_tab:
 
 # -------------------- My Shares Tab --------------------
 with shares_tab:
-    st.markdown("## 💼 My Share Holdings")
+    st.markdown("## My Share Holdings")
     
     if not portfolio_df.empty:
         # Portfolio overview cards
@@ -498,16 +498,16 @@ with shares_tab:
         pnl_percentage = (total_pnl / total_investment) * 100 if total_investment > 0 else 0
         
         with col1:
-            st.metric("💰 Total Investment", f"₹{total_investment:,.0f}")
+            st.metric(" Total Investment", f"₹{total_investment:,.0f}")
         with col2:
-            st.metric("📈 Current Value", f"₹{total_current_value:,.0f}")
+            st.metric("Current Value", f"₹{total_current_value:,.0f}")
         with col3:
-            st.metric("💵 Total P&L", f"₹{total_pnl:,.0f}", f"{pnl_percentage:+.1f}%")
+            st.metric("Total P&L", f"₹{total_pnl:,.0f}", f"{pnl_percentage:+.1f}%")
         with col4:
-            st.metric("📊 Total Holdings", f"{len(portfolio_df)} stocks")
+            st.metric(" Total Holdings", f"{len(portfolio_df)} stocks")
     
         # Detailed holdings table
-        st.markdown("### 📋 Detailed Holdings")
+        st.markdown("###  Detailed Holdings")
         
         # Create enhanced portfolio display
         enhanced_portfolio = portfolio_df.copy()
@@ -563,7 +563,7 @@ with shares_tab:
         )
         
         # Top performers section
-        st.markdown("### 🏆 Top Performers")
+        st.markdown("###  Top Performers")
         col1, col2 = st.columns(2)
         
         with col1:
@@ -574,7 +574,7 @@ with shares_tab:
                 st.success(f"**{row['Stock']}**: +{row['P&L_%']:.1f}%")
         
         with col2:
-            st.markdown("#### 📉 Underperformers")
+            st.markdown("####  Underperformers")
             top_losers = enhanced_portfolio.nsmallest(3, 'P&L_%')[['Stock', 'P&L_%']].copy()
             top_losers['Stock'] = top_losers['Stock'].str.replace('.NS', '')
             for _, row in top_losers.iterrows():
@@ -623,7 +623,7 @@ with analysis_tab:
             st.plotly_chart(stock_fig, use_container_width=True)
         
         # Performance metrics
-        st.markdown("### 📊 Performance Metrics")
+        st.markdown("### Performance Metrics")
         col1, col2, col3, col4 = st.columns(4)
         
         with col1:
@@ -650,20 +650,20 @@ with analysis_tab:
 
 # -------------------- Charts Tab --------------------
 with charts_tab:
-    st.markdown("## 📈 Interactive Stock Analysis")
+    st.markdown("##  Interactive Stock Analysis")
     
     col1, col2 = st.columns(2)
     with col1:
-        selected_sector = st.selectbox("🏢 Choose Sector", list(stocks.keys()))
+        selected_sector = st.selectbox(" Choose Sector", list(stocks.keys()))
     with col2:
-        selected_stock = st.selectbox("📈 Choose Stock", stocks[selected_sector])
+        selected_stock = st.selectbox("Choose Stock", stocks[selected_sector])
     
     plot_stock_chart(selected_stock)
     
     # Additional technical analysis
     df = fetch_stock_price(selected_stock)
     if df is not None:
-        st.markdown("### 📊 Technical Indicators")
+        st.markdown("###  Technical Indicators")
         col1, col2, col3 = st.columns(3)
         
         with col1:
@@ -704,7 +704,7 @@ with news_tab:
             
     except Exception as e:
         articles = fetch_alternative_news()
-        st.info("📚 Showing curated market updates")
+        st.info(" Showing curated market updates")
     
     # Display news in cards
     if articles:
@@ -757,7 +757,7 @@ with news_tab:
 st.markdown("---")
 st.markdown("""
     <div style="text-align: center; padding: 2rem 0; color: #b0b0b0;">
-        <p>🛠️ <strong>Enhanced Stock Portfolio Dashboard</strong></p>
+        <p> <strong>Enhanced Stock Portfolio Dashboard</strong></p>
         <p>Powered by yFinance • Plotly • Streamlit • NewsAPI</p>
         <p style="font-size: 0.8rem;">.Upload your own portfolio CSV or use sample data </p>
     </div>
