@@ -2,7 +2,125 @@ import streamlit as st
 import yfinance as yf
 import requests
 import plotly.graph_objs as go
-import plotly.express as px
+import plotly.express as px# -------------------- White Mode Theme --------------------
+def apply_light_theme():
+    st.markdown("""
+        <style>
+            /* Light Mode Color Palette */
+            :root {
+                --light-bg: #f5f5f5;          /* White/Off-White Background */
+                --light-surface: #ffffff;      /* Pure White Surface/Cards */
+                --light-accent: #ff6b35;      /* Orange Accent (kept) */
+                --light-text: #1a1a1a;        /* Dark Text */
+                --light-text-secondary: #5e5e5e; /* Gray Secondary Text */
+                --light-border: #cccccc;      /* Light Gray Border */
+            }
+            
+            /* Main app styling */
+            .stApp {
+                background: var(--light-bg);
+                color: var(--light-text);
+            }
+            
+            /* Sidebar styling */
+            .css-1d391kg {
+                background-color: var(--light-surface);
+                border-right: 1px solid var(--light-border);
+            }
+            
+            /* Metric containers */
+            div[data-testid="metric-container"] {
+                background: var(--light-surface);
+                border: 1px solid var(--light-border);
+                border-radius: 12px;
+                padding: 1.2rem;
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Lighter shadow */
+                transition: transform 0.2s ease;
+            }
+            
+            div[data-testid="metric-container"]:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 4px 8px rgba(255, 107, 53, 0.2); /* Accent shadow on hover */
+            }
+            
+            /* Metric text colors */
+            div[data-testid="metric-container"] label {
+                color: var(--light-text-secondary) !important;
+                font-weight: 500;
+            }
+            
+            div[data-testid="metric-container"] div[data-testid="metric-value"] {
+                color: var(--light-text) !important;
+                font-weight: 700;
+            }
+            
+            /* Force all metric text to be visible */
+            div[data-testid="metric-container"] * {
+                color: var(--light-text) !important;
+            }
+            
+            div[data-testid="metric-container"] label {
+                color: var(--light-text-secondary) !important;
+            }
+            
+            /* Delta values - inherit color from Streamlit logic (green/red) */
+            div[data-testid="metric-container"] [data-testid="metric-delta"] {
+                color: inherit !important;
+            }
+            
+            /* Tab styling */
+            .stTabs [data-baseweb="tab-list"] {
+                gap: 8px;
+            }
+            
+            .stTabs [data-baseweb="tab"] {
+                background-color: var(--light-surface);
+                border-radius: 8px;
+                border: 1px solid var(--light-border);
+                color: var(--light-text-secondary);
+                font-weight: 500;
+                transition: all 0.2s ease;
+            }
+            
+            .stTabs [aria-selected="true"] {
+                background-color: var(--light-accent);
+                color: white;
+                border-color: var(--light-accent);
+            }
+            
+            /* Headers */
+            h1, h2, h3 {
+                color: var(--light-text);
+                font-weight: 600;
+            }
+            
+            /* News card styling (modified for light background) */
+            .stMarkdown > div > div > div > div > div {
+                background: var(--light-surface); 
+                border: 1px solid var(--light-border); 
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            }
+
+            /* Plotly Chart background */
+            /* We will handle this by removing the 'plotly_dark' template */
+
+            /* Success/Warning/Error messages */
+            .stSuccess {
+                background-color: rgba(34, 197, 94, 0.1);
+                border: 1px solid rgba(34, 197, 94, 0.3);
+            }
+            
+            .stWarning {
+                background-color: rgba(251, 191, 36, 0.1);
+                border: 1px solid rgba(251, 191, 36, 0.3);
+            }
+            
+            .stError {
+                background-color: rgba(239, 68, 68, 0.1);
+                border: 1px solid rgba(239, 68, 68, 0.3);
+            }
+        </style>
+    """, unsafe_allow_html=True)
 import pandas as pd
 import numpy as np
 from datetime import datetime
