@@ -1,4 +1,7 @@
+# Example requirements.txt
 streamlit
 pandas
-# ... other dependencies
 yfinance
+plotly   # <--- ADD THIS LINE
+numpy    # <--- Ensure this is present if needed
+requests # <--- Ensure this is present if needed
